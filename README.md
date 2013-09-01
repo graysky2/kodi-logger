@@ -1,6 +1,9 @@
 ## Description
 xbmc-logger is a simple perl script that will keep a log of everything you watch on xbmc.
 
+## Dependencies
+* Perl
+
 ## Installation
 Copy the script to a public directory such as /usr/local/bin and make sure it is executable.
 ```
