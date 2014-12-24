@@ -1,5 +1,5 @@
 ## Description
-xbmc-logger is a simple perl script that will keep a log of everything you watch on xbmc.
+kodi-logger (and the now deprecated xbmc-logger) is a simple perl script that will keep a log of everything you watch on kodi (xbmc) without showing repeated entries.
 
 ## Dependencies
 * Perl
@@ -7,18 +7,19 @@ xbmc-logger is a simple perl script that will keep a log of everything you watch
 ## Installation
 Copy the script to a public directory such as /usr/local/bin and make sure it is executable.
 ```
-cp /path/to/xbmc-logger.pl /usr/local/bin/xbmc-logger
-chmod 755 /usr/local/bin/xbmc-logger
+cp /path/to/kodi-logger.pl /usr/local/bin/kodi-logger
+chmod 755 /usr/local/bin/kodi-logger
 ```
 
 ## Usage
-To use xbmc-logger, simply call the script as the user that runs xbmc as some regular interval (once every 5 min for example) which is easily accomplished in your crontab:
+To use kodi-logger, simply call the script at some regular interval (once every 5 min for example) which is easily accomplished in your crontab:
 
 ```
 crontab -l
-*/5 * * * *	/usr/local/bin/xbmc-logger
+*/5 * * * *	/usr/local/bin/kodi-logger
 ```
-The extracted output is saved to $HOME/.xbmc/xbmc-logger.log and simply shows the date/time and file name that was viewed.
+
+The extracted output is saved to the directory you specify in the script itself and simply shows the date/time and file name that was viewed.
 
 ## Example log
 ```
