@@ -1,29 +1,29 @@
 #!/usr/bin/perl
 
-# xbmc-logger version 1.3
+# kodi-logger version 1.3
 #
 # CHANGELOG
 # v1.0  Initial release
-# V1.1  Now works with xbmc on x86 or ARM
+# V1.1  Now works with kodi on x86 or ARM
 # v1.2	Works with gotham
-# v1.3	Minor typos corrected
+# v1.3	Renamed for kodi rename
 
 use warnings;
 use strict;
 use File::Copy;
 use DB_File;
 
-# this is the directory where xbmc.log is expected
-#my $w_dir = "$ENV{HOME}/.xbmc/temp";
-my $w_dir = '/var/lib/xbmc/.xbmc/temp';
+# this is the directory where kodi.log is expected
+#my $w_dir = "$ENV{HOME}/.kodi/temp";
+my $w_dir = '/var/lib/kodi/.kodi/temp';
 
-# this is the dir where you wish to write out the xmbc-watched.log
+# this is the dir where you wish to write out the kodi-watched.log
 # if you want it to be something outside of your user's home dir like
-# /var/log for example, that location must have an empty xbmc-watched.log
+# /var/log for example, that location must have an empty kodi-watched.log
 # present and owned by the user:group you wish to run the script as 
 # or else this script will fail to write to the log
 my $l_dir = '/var/log';
-#my $l_dir = "$ENV{HOME}/.xbmc";
+#my $l_dir = "$ENV{HOME}/.kodi";
 
 # this is the dir where a temp db is kept
 my $t_dir = '/tmp';
@@ -32,8 +32,8 @@ my $now = localtime();
 my $state_fn = "$t_dir/state_db";
 my $db_obj = tie my %seen, 'DB_File', $state_fn
 	or die "Unable to tie to state file $state_fn\n";
-my $fn = "$w_dir/xbmc.log";
-my $ofn = "$l_dir/xbmc-watched.log";
+my $fn = "$w_dir/kodi.log";
+my $ofn = "$l_dir/kodi-watched.log";
 
 open my $ofh, '>>', $ofn
 	or die "Unable to open file $ofn for writing ($!). Stopped";
