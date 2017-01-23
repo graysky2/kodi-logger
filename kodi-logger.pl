@@ -4,9 +4,9 @@
 #
 # CHANGELOG
 # v1.0  Initial release
-# V1.1  Now works with kodi on x86 or ARM
-# v1.2	Works with gotham
-# v1.3	Renamed for kodi rename
+# V1.1  Now works with Kodi on x86 or ARM
+# v1.2	Works with Gotham+
+# v1.3	Renamed for Kodi rename and tested on up to Krypton
 
 use warnings;
 use strict;
