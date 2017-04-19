@@ -1,12 +1,13 @@
 #!/usr/bin/perl
 
-# kodi-logger version 1.3
+# kodi-logger version 1.4
 #
 # CHANGELOG
 # v1.0  Initial release
 # V1.1  Now works with Kodi on x86 or ARM
 # v1.2	Works with Gotham+
 # v1.3	Renamed for Kodi rename and tested on up to Krypton
+# v1.4	More generic processing
 
 use warnings;
 use strict;
@@ -23,9 +24,6 @@ my $w_dir = '/var/lib/kodi/.kodi/temp';
 # present and owned by the user:group you wish to run the script as 
 # or else this script will fail to write to the log
 my $l_dir = '/var/log';
-#my $l_dir = "$ENV{HOME}/.kodi";
-
-# this is the dir where a temp db is kept
 my $t_dir = '/tmp';
 my $now = localtime();
 
@@ -42,8 +40,7 @@ open my $fh, '<', $fn
 
 while (my $line = <$fh>) {
 	chomp $line;
-#if ($line =~ m/^(\S+)\s.*Player: Opening: (.*)/) {
-	if ($line =~ m/^(\S+)\s.*DVDPlayer: Opening: (.*)/) {
+	if ($line =~ m/^(\S+)\s.*Player: Opening: (.*)/) {
 		my $ts = $1;
 		my $dn = $2;
 		if (!$seen{$ts}) {
