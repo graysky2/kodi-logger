@@ -1,14 +1,23 @@
 ## Description
-kodi-logger (and the now deprecated xbmc-logger) is a simple perl script that will keep a log of everything you watch on kodi (xbmc) without showing repeated entries.
+A simple perl script that will keep a log of everything you watch on kodi without showing repeated entries.
 
 ## Dependencies
 * Perl
 
-## Installation
-Copy the script to a public directory such as /usr/local/bin and make sure it is executable.
+## Installation and Setup
+Currently, two versions are supplied, one supporting kodi version 17.x and one supporting kodi version 18.x.
+
+Copy the correct version of script to a public directory such as /usr/local/bin and make it is executable.
 ```
-cp /path/to/kodi-logger.pl /usr/local/bin/kodi-logger
-chmod 755 /usr/local/bin/kodi-logger
+% cp /path/to/kodi17-logger.pl /usr/local/bin/kodi17-logger
+% chmod 755 /usr/local/bin/kodi17-logger
+```
+
+The script expects to have write access to `/var/log/kodi-watched.log` so you will need to manually create this file and change the ownership of it to the user who shall run the script:
+
+```
+# touch /var/log/kodi-watched.log
+# chown myuser:mygroup /var/log/kodi-watched.log
 ```
 
 ## Usage
@@ -16,7 +25,7 @@ To use kodi-logger, simply call the script at some regular interval (once every 
 
 ```
 crontab -l
-*/5 * * * *	/usr/local/bin/kodi-logger
+*/5 * * * *	/usr/local/bin/kodi17-logger
 ```
 
 The extracted output is saved to the directory you specify in the script itself and simply shows the date/time and file name that was viewed.
