@@ -1,16 +1,18 @@
 ## Description
-A simple perl script that will keep a log of everything you watch on kodi without showing repeated entries.
+A bash script that will keep a log of everything you watch on Kodi without showing repeated entries.
 
 ## Dependencies
-* Perl
+* bash >=4.0
+* coreutils (specifically comm)
+* gawk
+* kodi >=18.0 (to generate the log files)
+* sed
 
 ## Installation and Setup
-Currently, two versions are supplied, one supporting kodi version 17.x and one supporting kodi version 18.x.
-
-Copy the correct version of script to a public directory such as /usr/local/bin and make it is executable.
+Copy `kodi18.logger.sh`to a public directory such as `/usr/local/bin/` and make it executable.
 ```
-% cp /path/to/kodi17-logger.pl /usr/local/bin/kodi17-logger
-% chmod 755 /usr/local/bin/kodi17-logger
+% cp /path/to/kodi18-logger.sh /usr/local/bin/kodi18-logger.sh
+% chmod 755 /usr/local/bin/kodi18-logger.sh
 ```
 
 The script expects to have write access to `/var/log/kodi-watched.log` so you will need to manually create this file and change the ownership of it to the user who shall run the script:
@@ -20,12 +22,15 @@ The script expects to have write access to `/var/log/kodi-watched.log` so you wi
 # chown myuser:mygroup /var/log/kodi-watched.log
 ```
 
+* Optionally change the `LOG` variable to reflect another path (this is the log file Kodi generates).
+* Optionally change the `FINAL` variable to reflect another path (this is final we generate with all the watched content).
+
 ## Usage
-To use kodi-logger, simply call the script at some regular interval (once every 5 min for example) which is easily accomplished in your crontab:
+To use kodi-logger, simply call the script at some regular interval (once every 5 min for example) which is easily accomplished with a crontab:
 
 ```
 crontab -l
-*/5 * * * *	/usr/local/bin/kodi17-logger
+*/5 * * * *	/usr/local/bin/kodi18-logger.sh
 ```
 
 The extracted output is saved to the directory you specify in the script itself and simply shows the date/time and file name that was viewed.
