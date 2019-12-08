@@ -1,8 +1,8 @@
 #!/bin/bash
 LOG=/var/lib/kodi/.kodi/temp/kodi.log
+FINAL=/var/log/kodi-watched.log
 TMP=/tmp
 TMPDB="$TMP/uniques"
-FINAL="/var/log/kodi-watched.log"
 
 if [[ ! -f "$FINAL" ]]; then
 	if ! touch "$FINAL"; then
@@ -16,18 +16,28 @@ if [[ ! -w "$FINAL" ]]; then
 	exit 1
 fi
 
-if [[ -f "$TMPDB.db" ]]; then
-	# already ran once so just see what if anything is new and capture the diffs
-	# credit to the following post for the sed line:
-	# https://unix.stackexchange.com/questions/24140/return-only-the-portion-of-a-line-after-a-matching-pattern
-	sed -n -e 's/^.*VideoPlayer::OpenFile: //p' "$LOG" | sed 's/ /_/g' | sort | uniq > "$TMPDB".2
-	comm -13 "$TMPDB".db "$TMPDB".2 > "$TMP"/diff.db
-	< "$TMP"/diff.db gawk '{ print strftime("%a %b %e %H:%M:%S %Y"), $0 }' >> "$FINAL"
+getdata() {
+	grep '^.*VideoPlayer::OpenFile:' "$LOG" > "$TMP"/whole.slice
+	awk '{ print $1 " " $2 }' <"$TMP"/whole.slice > "$TMP"/dates.slice
+	sed -n -e 's/^.*VideoPlayer::OpenFile: //p' <"$TMP"/whole.slice > "$TMP"/names.slice
 
+	# convert dates from log
+	while IFS=',' read -ra arr; do
+		printf "%s\n" "$(date -d "${arr[0]}" '+%a %b %e %r %Y')"
+	done < "$TMP"/dates.slice > "$TMP"/rightdates.slice
+}
+
+if [[ -f "$TMPDB".db ]]; then
+	# compare and only write out new entries
+	getdata
+	paste -d ' ' "$TMP"/rightdates.slice "$TMP"/names.slice > "$TMPDB".2
+	comm -13 "$TMPDB".db "$TMPDB".2 >> "$FINAL"
 	mv "$TMPDB".2 "$TMPDB".db
-	rm -f "$TMP/diff".db
 else
 	# first time so capture all entries
-	sed -n -e 's/^.*VideoPlayer::OpenFile: //p' "$LOG" | sed 's/ /_/g' | sort | uniq > "$TMPDB.db"
-	< "$TMPDB.db" gawk '{ print strftime("%a %b %e %H:%M:%S %Y"), $0 }' >> "$FINAL"
+	getdata
+	paste -d ' ' "$TMP"/rightdates.slice "$TMP"/names.slice > "$TMPDB".db
+	cat "$TMPDB".db >> "$FINAL"
 fi
+
+rm -f "$TMP"/diff.db "$TMP"/whole.slice "$TMP"/dates.slice "$TMP"/names.slice "$TMP"/rightdates.slice
