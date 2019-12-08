@@ -16,8 +16,7 @@ if [[ ! -w "$FINAL" ]]; then
 	exit 1
 fi
 
-getdata() {
-	grep '^.*VideoPlayer::OpenFile:' "$LOG" > "$TMP"/whole.slice
+process() {
 	awk '{ print $1 " " $2 }' <"$TMP"/whole.slice > "$TMP"/dates.slice
 	sed -n -e 's/^.*VideoPlayer::OpenFile: //p' <"$TMP"/whole.slice > "$TMP"/names.slice
 
@@ -28,16 +27,25 @@ getdata() {
 }
 
 if [[ -f "$TMPDB".db ]]; then
-	# compare and only write out new entries
-	getdata
-	paste -d ' ' "$TMP"/rightdates.slice "$TMP"/names.slice > "$TMPDB".2
-	comm -13 "$TMPDB".db "$TMPDB".2 >> "$FINAL"
-	mv "$TMPDB".2 "$TMPDB".db
+	grep '^.*VideoPlayer::OpenFile:' "$LOG" > "$TMP/maybe.slice"
+
+	# is new snapshot is different from last time? die if so
+	if cmp -s "$TMP/maybe.slice" "$TMP/whole.slice"; then
+		rm -f "$TMP/maybe.slice"
+	else
+		# compare and only write out new entries
+		mv "$TMP/maybe.slice" "$TMP/whole.slice"
+		process
+		paste -d ' ' "$TMP"/rightdates.slice "$TMP"/names.slice > "$TMPDB".2
+		comm -13 "$TMPDB".db "$TMPDB".2 >> "$FINAL"
+		mv "$TMPDB".2 "$TMPDB".db
+	fi
 else
 	# first time so capture all entries
-	getdata
+	grep '^.*VideoPlayer::OpenFile:' "$LOG" > "$TMP/whole.slice"
+	process
 	paste -d ' ' "$TMP"/rightdates.slice "$TMP"/names.slice > "$TMPDB".db
 	cat "$TMPDB".db >> "$FINAL"
 fi
 
-rm -f "$TMP"/diff.db "$TMP"/whole.slice "$TMP"/dates.slice "$TMP"/names.slice "$TMP"/rightdates.slice
+rm -f "$TMP"/diff.db "$TMP"/dates.slice "$TMP"/names.slice "$TMP"/rightdates.slice

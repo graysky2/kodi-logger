@@ -4,6 +4,7 @@ Keeps track of every video you watch on Kodi (XBMC).
 ## Dependencies
 * bash >=4.0
 * coreutils
+* diffutils
 * gawk
 * sed
 
