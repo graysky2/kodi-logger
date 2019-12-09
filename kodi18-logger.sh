@@ -4,17 +4,24 @@ FINAL=/var/log/kodi-watched.log
 TMP=/tmp
 TMPDB="$TMP/uniques"
 
-if [[ ! -f "$FINAL" ]]; then
-	if ! touch "$FINAL"; then
-		echo " Cannot make the empty file $FINAL"
+check() {
+	if [[ ! -f "$FINAL" ]]; then
+		if ! touch "$FINAL"; then
+			echo " Cannot make the empty file $FINAL"
+			exit 1
+		fi
+	fi
+
+	if [[ ! -w "$FINAL" ]]; then
+		echo " Cannot write to $FINAL so modify the permissions on it and try again."
 		exit 1
 	fi
-fi
 
-if [[ ! -w "$FINAL" ]]; then
-	echo " Cannot write to $FINAL so modify the permissions on it and try again."
-	exit 1
-fi
+	if [[ ! -f "$LOG" ]]; then
+		echo " Cannot find $LOG"
+		exit 1
+	fi
+}
 
 process() {
 	awk '{ print $1 " " $2 }' <"$TMP"/whole.slice > "$TMP"/dates.slice
@@ -25,6 +32,8 @@ process() {
 		printf "%s\n" "$(date -d "${arr[0]}" '+%a %b %e %r %Y')"
 	done < "$TMP"/dates.slice > "$TMP"/rightdates.slice
 }
+
+check
 
 if [[ -f "$TMPDB".db ]]; then
 	grep '^.*VideoPlayer::OpenFile:' "$LOG" > "$TMP/maybe.slice"
