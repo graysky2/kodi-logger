@@ -1,0 +1,10 @@
+[Unit]
+Description=Hourly kodi logger
+
+[Timer]
+OnActiveSec=0m
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

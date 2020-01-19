@@ -1,0 +1,9 @@
+[Unit]
+Description=Kodi logger
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/kodi-logger
+
+[Install]
+WantedBy=default.target

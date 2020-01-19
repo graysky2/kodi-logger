@@ -9,13 +9,13 @@ Keeps track of every video you watch on Kodi (XBMC).
 * sed
 
 ## Installation and Setup
-Copy `kodi18.logger.sh`to a public directory such as `/usr/local/bin/` and make it executable.
+The included `Makefile` will install the script and optional systemd service/timer.  Users of Arch can use the [PKGBUILD](https://aur.archlinux.org/packages/kodi-logger/) instead.  All others can simply:
 ```
-% cp /path/to/kodi18-logger.sh /usr/local/bin/kodi18-logger.sh
-% chmod 755 /usr/local/bin/kodi18-logger.sh
+$ make
+# make install
 ```
 
-The script expects to have write access to `/var/log/kodi-watched.log` so you will need to manually create this file and change the ownership of it to the user who shall run the script:
+If you are NOT using the systemd service, the script expects to have write access to `/var/log/kodi-watched.log` so you will need to manually create this file and change the ownership of it to the user who shall run the script:
 
 ```
 # touch /var/log/kodi-watched.log
@@ -26,14 +26,14 @@ The script expects to have write access to `/var/log/kodi-watched.log` so you wi
 * Optionally change the `FINAL` variable to reflect another path (this is final we generate with all the watched content).
 
 ## Usage
-To use kodi-logger, simply call the script at some regular interval (once an hour for example) which is easily accomplished with a crontab:
-
-```
-crontab -l
-0 * * * *	/usr/local/bin/kodi18-logger.sh
-```
-
 The extracted output is saved to the directory you specify in the script itself and simply shows the date/time and file name that was viewed.
+
+It is most useful to run the script at some interval.  The included systemd timer unit will do so once hourly.
+
+```
+# systemctl enable kodi-logger.timer
+# systemctl start kodi-logger.timer
+```
 
 ## Example log
 ```

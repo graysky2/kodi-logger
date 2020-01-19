@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# kodi-logger @VERSION@ graysky https://github.com/graysky2/kodi-logger
+
 LOG=/var/lib/kodi/.kodi/temp/kodi.log
 FINAL=/var/log/kodi-watched.log
 TMP=/tmp
