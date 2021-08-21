@@ -1,5 +1,7 @@
 [Unit]
 Description=Kodi logger
+After=remote-fs.target systemd-user-sessions.service network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
