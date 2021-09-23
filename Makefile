@@ -1,4 +1,4 @@
-VERSION = 1.9
+VERSION = 2.1
 PN = kodi-logger
 
 PREFIX ?= /usr
